@@ -11,6 +11,11 @@ export default function CheckoutForm() {
   const [selectedSchedule, setSelectedSchedule] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<string | null>(null);
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const handleSelectCategory = (e: Event) => {
       const customEvent = e as CustomEvent<string>;
@@ -21,6 +26,71 @@ export default function CheckoutForm() {
     window.addEventListener("selectCategory", handleSelectCategory);
     return () => window.removeEventListener("selectCategory", handleSelectCategory);
   }, []);
+
+  const handlePayment = async () => {
+    if (!selectedCategory || !selectedSchedule || !selectedSession) {
+      alert("Mohon pilih kategori, jadwal, dan sesi terlebih dahulu.");
+      return;
+    }
+    if (!name || !email || !whatsapp) {
+      alert("Mohon lengkapi data diri Anda (Nama, Email, dan WhatsApp).");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/midtrans", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          whatsapp,
+          category: selectedCategory,
+          schedule: selectedSchedule,
+          session: selectedSession,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.token) {
+        // Trigger Snap popup
+        (window as any).snap.pay(data.token, {
+          onSuccess: function (result: any) {
+            alert("Pembayaran berhasil! Anda akan dialihkan ke WhatsApp Admin untuk dimasukkan ke grup kelas.");
+            console.log(result);
+            
+            // Redirect ke link WhatsApp Admin dengan pesan bawaan
+            const waNumber = "6281511591935";
+            const message = `Halo Admin, saya sudah melakukan pembayaran untuk kelas EFT Course.\n\nBerikut detail pesanan saya:\n- Nama: ${name}\n- Kelas: ${selectedCategory}\n- Jadwal: ${selectedSchedule}\n- Sesi: ${selectedSession}\n\nMohon bantuannya untuk memasukkan saya ke grup WhatsApp kelas ya. Terima kasih!`;
+            
+            const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+            window.location.href = waLink;
+          },
+          onPending: function (result: any) {
+            alert("Menunggu pembayaran Anda.");
+            console.log(result);
+          },
+          onError: function (result: any) {
+            alert("Pembayaran gagal!");
+            console.log(result);
+          },
+          onClose: function () {
+            alert("Anda menutup halaman pembayaran sebelum menyelesaikannya.");
+          },
+        });
+      } else {
+        alert(data.error || "Gagal mendapatkan token pembayaran.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan pada sistem.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section id="checkout" className="py-24 bg-pink-50/50">
@@ -134,16 +204,34 @@ export default function CheckoutForm() {
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Nama Lengkap</label>
                   <input
                     type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Masukkan nama..."
                     className="w-full px-5 py-4 rounded-xl border border-slate-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
+                    required
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="contoh@email.com"
+                    className="w-full px-5 py-4 rounded-xl border border-slate-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
+                    required
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Digunakan untuk mengirimkan bukti pembayaran (invoice).</p>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Nomor WhatsApp Aktif</label>
                   <input
                     type="tel"
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
                     placeholder="08xxxxxxxxxx"
                     className="w-full px-5 py-4 rounded-xl border border-slate-300 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
+                    required
                   />
                 </div>
               </div>
@@ -153,10 +241,12 @@ export default function CheckoutForm() {
             <div className="pt-4">
               <button
                 type="button"
-                className="w-full py-5 rounded-2xl bg-indigo-950 hover:bg-indigo-900 text-white font-bold text-lg transition-all shadow-xl shadow-indigo-950/20 active:scale-[0.98] flex items-center justify-center gap-2"
+                onClick={handlePayment}
+                disabled={isLoading}
+                className="w-full py-5 rounded-2xl bg-indigo-950 hover:bg-indigo-900 disabled:bg-slate-400 text-white font-bold text-lg transition-all shadow-xl shadow-indigo-950/20 active:scale-[0.98] flex items-center justify-center gap-2"
               >
-                Bayar Rp 50.000 &amp; Masuk Grup WA
-                <ArrowRight className="w-5 h-5" />
+                {isLoading ? "Memproses..." : "Bayar Rp 50.000 & Masuk Grup WA"}
+                {!isLoading && <ArrowRight className="w-5 h-5" />}
               </button>
               <p className="text-center text-sm text-slate-500 mt-4 flex items-center justify-center gap-1">
                 <ShieldCheck className="w-4 h-4 text-green-500" /> Pembayaran Aman via Midtrans
