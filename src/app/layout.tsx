@@ -17,6 +17,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "EFT Course - Lancar Speaking Nggak Perlu Mahal",
   description: "Waktunya Praktik Ngobrol 3x Seminggu! Sesi live interactive bareng expert tutor.",
+  icons: {
+    icon: '/favicon.webp',
+  },
 };
 
 export default function RootLayout({

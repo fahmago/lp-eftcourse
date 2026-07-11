@@ -11,7 +11,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 export default function FloatingWhatsApp() {
   return (
     <motion.a
-      href="https://wa.me/6281234567890" 
+      href="https://wa.me/6281511591935" 
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_40px_-10px_rgba(37,211,102,0.7)] flex items-center justify-center hover:bg-[#1ebd5a] transition-colors group"
@@ -25,7 +25,7 @@ export default function FloatingWhatsApp() {
       
       {/* Tooltip */}
       <span className="absolute right-full mr-4 bg-white text-slate-800 text-sm font-bold px-4 py-2 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-slate-100 origin-right scale-95 group-hover:scale-100">
-        Tanya Min-Course 💬
+        Contact Us via WhatsApp
       </span>
       
       {/* Pulse effect */}

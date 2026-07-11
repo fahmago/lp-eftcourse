@@ -18,9 +18,18 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} EFT Course. All rights reserved.
           </div>
 
-          {/* Social Links */}
-          <div className="flex gap-4">
-            {[
+          {/* Contact & Social Links */}
+          <div className="flex items-center gap-6">
+            <a 
+              href="https://wa.me/6281511591935" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-sm font-semibold hover:text-pink-400 transition-colors"
+            >
+              Contact Us
+            </a>
+            <div className="flex gap-4">
+              {[
               { Icon: InstagramIcon, label: "Instagram", url: "https://instagram.com/eftcourse" },
               { Icon: YoutubeIcon, label: "YouTube", url: "https://www.youtube.com/channel/UCe0mnax0u-gfPPk3U68xm0w" },
             ].map(({ Icon, label, url }) => (
@@ -35,6 +44,7 @@ export default function Footer() {
                 <Icon className="w-5 h-5" />
               </a>
             ))}
+            </div>
           </div>
         </div>
       </div>
