@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Clock, ArrowRight, ShieldCheck } from "lucide-react";
+import { Clock, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle, X } from "lucide-react";
 import { fadeIn } from "@/lib/animations";
 import { CATEGORIES, SCHEDULES, SESSIONS } from "@/lib/constants";
 
@@ -15,6 +15,17 @@ export default function CheckoutForm() {
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [redirectCount, setRedirectCount] = useState(3);
+
+  // Generate WA Link function to reuse
+  const getAdminWaLink = () => {
+    const waNumber = "6281511591935";
+    const message = `Halo Admin, saya sudah melakukan pembayaran untuk kelas EFT Course.\n\nBerikut detail pesanan saya:\n- Nama: ${name}\n- Kelas: ${selectedCategory}\n- Jadwal: ${selectedSchedule}\n- Sesi: ${selectedSession}\n\nMohon bantuannya untuk memasukkan saya ke grup WhatsApp kelas ya. Terima kasih!`;
+    return `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+  };
 
   useEffect(() => {
     const handleSelectCategory = (e: Event) => {
@@ -29,11 +40,13 @@ export default function CheckoutForm() {
 
   const handlePayment = async () => {
     if (!selectedCategory || !selectedSchedule || !selectedSession) {
-      alert("Mohon pilih kategori, jadwal, dan sesi terlebih dahulu.");
+      setErrorMessage("Mohon pilih kategori kelas, jadwal, dan sesi terlebih dahulu.");
+      setShowErrorModal(true);
       return;
     }
     if (!name || !email || !whatsapp) {
-      alert("Mohon lengkapi data diri Anda (Nama, Email, dan WhatsApp).");
+      setErrorMessage("Mohon lengkapi data diri Anda (Nama, Email, dan WhatsApp).");
+      setShowErrorModal(true);
       return;
     }
 
@@ -59,15 +72,19 @@ export default function CheckoutForm() {
         // Trigger Snap popup
         (window as any).snap.pay(data.token, {
           onSuccess: function (result: any) {
-            alert("Pembayaran berhasil! Anda akan dialihkan ke WhatsApp Admin untuk dimasukkan ke grup kelas.");
             console.log(result);
+            setShowSuccessModal(true);
             
-            // Redirect ke link WhatsApp Admin dengan pesan bawaan
-            const waNumber = "6281511591935";
-            const message = `Halo Admin, saya sudah melakukan pembayaran untuk kelas EFT Course.\n\nBerikut detail pesanan saya:\n- Nama: ${name}\n- Kelas: ${selectedCategory}\n- Jadwal: ${selectedSchedule}\n- Sesi: ${selectedSession}\n\nMohon bantuannya untuk memasukkan saya ke grup WhatsApp kelas ya. Terima kasih!`;
-            
-            const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-            window.location.href = waLink;
+            // Countdown 3 detik lalu redirect
+            let counter = 3;
+            const timer = setInterval(() => {
+              counter -= 1;
+              setRedirectCount(counter);
+              if (counter <= 0) {
+                clearInterval(timer);
+                window.location.href = getAdminWaLink();
+              }
+            }, 1000);
           },
           onPending: function (result: any) {
             alert("Menunggu pembayaran Anda.");
@@ -255,6 +272,70 @@ export default function CheckoutForm() {
           </form>
         </motion.div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl"
+          >
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-10 h-10 text-green-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">Pembayaran Berhasil!</h3>
+            <p className="text-slate-600 mb-6">
+              Terima kasih, <strong>{name}</strong>! Pendaftaran Anda untuk kelas <strong>{selectedCategory}</strong> telah kami terima.
+            </p>
+            
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-8">
+              <p className="text-sm text-slate-500">Anda akan diarahkan ke obrolan WhatsApp Admin dalam</p>
+              <p className="text-3xl font-bold text-indigo-950 my-2">{redirectCount}</p>
+              <p className="text-sm text-slate-500">detik</p>
+            </div>
+
+            <button
+              onClick={() => window.location.href = getAdminWaLink()}
+              className="w-full py-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold transition-all shadow-lg shadow-green-500/30"
+            >
+              Lanjutkan ke WhatsApp Sekarang
+            </button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {showErrorModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl relative"
+          >
+            <button 
+              onClick={() => setShowErrorModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertCircle className="w-10 h-10 text-red-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">Form Belum Lengkap</h3>
+            <p className="text-slate-600 mb-8">
+              {errorMessage}
+            </p>
+
+            <button
+              onClick={() => setShowErrorModal(false)}
+              className="w-full py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition-all shadow-lg shadow-slate-900/20"
+            >
+              Mengerti & Lengkapi
+            </button>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }
