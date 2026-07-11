@@ -3,9 +3,19 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { fadeIn, staggerContainer } from "@/lib/animations";
-import { PROGRAMS } from "@/lib/constants";
+import { PROGRAMS, CATEGORIES } from "@/lib/constants";
 
 export default function Programs() {
+  const handleSelectProgram = (index: number) => {
+    const category = CATEGORIES[index];
+    window.dispatchEvent(new CustomEvent("selectCategory", { detail: category }));
+    
+    // Slight delay to ensure state updates smoothly, though native scroll can handle it directly
+    setTimeout(() => {
+      document.getElementById("checkout")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
   return (
     <section id="program" className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,6 +40,7 @@ export default function Programs() {
             <motion.div
               key={i}
               variants={fadeIn}
+              onClick={() => handleSelectProgram(i)}
               className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
             >
               <div className="relative h-48 rounded-2xl overflow-hidden mb-6 bg-slate-50 flex items-center justify-center">

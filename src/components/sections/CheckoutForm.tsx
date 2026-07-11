@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Clock, ArrowRight, ShieldCheck } from "lucide-react";
 import { fadeIn } from "@/lib/animations";
@@ -10,6 +10,17 @@ export default function CheckoutForm() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSchedule, setSelectedSchedule] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleSelectCategory = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (CATEGORIES.includes(customEvent.detail as any)) {
+        setSelectedCategory(customEvent.detail);
+      }
+    };
+    window.addEventListener("selectCategory", handleSelectCategory);
+    return () => window.removeEventListener("selectCategory", handleSelectCategory);
+  }, []);
 
   return (
     <section id="checkout" className="py-24 bg-pink-50/50">
