@@ -11,7 +11,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 export default function FloatingWhatsApp() {
   return (
     <motion.a
-      href="https://wa.me/6281511591935" 
+      href="https://wa.me/6281511591935?text=Halo%20Min-Course%2C%20saya%20tertarik%20dengan%20program%20EFT%20Course%20dan%20ingin%20bertanya%20lebih%20lanjut." 
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_40px_-10px_rgba(37,211,102,0.7)] flex items-center justify-center hover:bg-[#1ebd5a] transition-colors group"
