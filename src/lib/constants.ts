@@ -78,8 +78,10 @@ export const HOW_IT_WORKS_STEPS = [
 export const CATEGORIES = ["KIDS", "TEEN", "ADULT"] as const;
 
 export const SCHEDULES = [
-  { id: "A", name: "Paket A", days: "Senin - Selasa - Rabu" },
-  { id: "B", name: "Paket B", days: "Kamis - Jumat - Sabtu" },
+  { id: "A", name: "Paket A", days: "Senin, Selasa, Rabu" },
+  { id: "B", name: "Paket B", days: "Kamis, Jumat, Sabtu" },
+  { id: "C", name: "Paket C", days: "Senin, Rabu, Jumat" },
+  { id: "D", name: "Paket D", days: "Selasa, Kamis, Sabtu" },
 ] as const;
 
 export type SessionItem = { label: string; group: string };
@@ -92,11 +94,39 @@ export const SESSIONS: Record<string, SessionItem[]> = {
     { label: "13.00 - 14.00", group: "Siang" },
     { label: "14.30 - 15.30", group: "Siang" },
     { label: "16.00 - 17.00", group: "Siang" },
-  ],
-  B: [
     { label: "19.00 - 20.00", group: "Malam" },
     { label: "20.30 - 21.30", group: "Malam" },
   ],
+  B: [
+    { label: "08.00 - 09.00", group: "Pagi" },
+    { label: "09.30 - 10.30", group: "Pagi" },
+    { label: "11.00 - 12.00", group: "Pagi" },
+    { label: "13.00 - 14.00", group: "Siang" },
+    { label: "14.30 - 15.30", group: "Siang" },
+    { label: "16.00 - 17.00", group: "Siang" },
+    { label: "19.00 - 20.00", group: "Malam" },
+    { label: "20.30 - 21.30", group: "Malam" },
+  ],
+  C: [
+    { label: "08.00 - 09.00", group: "Pagi" },
+    { label: "09.30 - 10.30", group: "Pagi" },
+    { label: "11.00 - 12.00", group: "Pagi" },
+    { label: "13.00 - 14.00", group: "Siang" },
+    { label: "14.30 - 15.30", group: "Siang" },
+    { label: "16.00 - 17.00", group: "Siang" },
+    { label: "19.00 - 20.00", group: "Malam" },
+    { label: "20.30 - 21.30", group: "Malam" },
+  ],
+  D: [
+    { label: "08.00 - 09.00", group: "Pagi" },
+    { label: "09.30 - 10.30", group: "Pagi" },
+    { label: "11.00 - 12.00", group: "Pagi" },
+    { label: "13.00 - 14.00", group: "Siang" },
+    { label: "14.30 - 15.30", group: "Siang" },
+    { label: "16.00 - 17.00", group: "Siang" },
+    { label: "19.00 - 20.00", group: "Malam" },
+    { label: "20.30 - 21.30", group: "Malam" },
+  ]
 };
 
 // ─── FAQ ─────────────────────────────────────────────────────────────────────────

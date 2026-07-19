@@ -186,7 +186,7 @@ export default function CheckoutForm() {
               <div>
                 <StepLabel number={3} title="Pilih Sesi" />
                 <p className="text-sm text-slate-500 mb-4 ml-10">
-                  {selectedSchedule === "A" ? "Senin – Selasa – Rabu" : "Kamis – Jumat – Sabtu"}
+                  {SCHEDULES.find(s => s.id === selectedSchedule)?.days}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {SESSIONS[selectedSchedule].map((s) => (
