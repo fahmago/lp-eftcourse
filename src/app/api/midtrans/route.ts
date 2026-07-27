@@ -42,6 +42,14 @@ export async function POST(req: NextRequest) {
         email: email,
         phone: whatsapp,
       },
+      enabled_payments: [
+        "bca_va",
+        "bni_va",
+        "bri_va",
+        "permata_va",
+        "gopay",
+        "qris",
+      ],
     };
 
     const transaction = await snap.createTransaction(parameter);
