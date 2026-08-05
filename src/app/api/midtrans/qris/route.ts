@@ -42,6 +42,9 @@ export async function POST(req: NextRequest) {
         email: email,
         phone: whatsapp,
       },
+      qris: {
+        acquirer: "gopay",
+      },
     };
 
     const transaction = await core.charge(parameter);
@@ -58,9 +61,10 @@ export async function POST(req: NextRequest) {
       transaction_status: transaction.transaction_status,
     });
   } catch (error: any) {
-    console.error("Midtrans QRIS Error:", error?.message || error);
+    const msg = error?.ApiResponse?.status_message || error?.message || "Unknown error";
+    console.error("Midtrans QRIS Error:", msg, error?.rawHttpClientData || "");
     return NextResponse.json(
-      { error: "Terjadi kesalahan saat membuat QRIS." },
+      { error: `Gagal membuat QRIS: ${msg}` },
       { status: 500 }
     );
   }

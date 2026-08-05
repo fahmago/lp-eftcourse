@@ -17,6 +17,7 @@ export default function CheckoutForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errorTitle, setErrorTitle] = useState("Terjadi Kesalahan");
 
   useEffect(() => {
     const handleSelectCategory = (e: Event) => {
@@ -31,11 +32,13 @@ export default function CheckoutForm() {
 
   const handlePayment = async () => {
     if (!selectedCategory || !selectedSchedule || !selectedSession) {
+      setErrorTitle("Form Belum Lengkap");
       setErrorMessage("Mohon pilih kategori kelas, jadwal, dan sesi terlebih dahulu.");
       setShowErrorModal(true);
       return;
     }
     if (!name || !email || !whatsapp) {
+      setErrorTitle("Form Belum Lengkap");
       setErrorMessage("Mohon lengkapi data diri Anda (Nama, Email, dan WhatsApp).");
       setShowErrorModal(true);
       return;
@@ -71,12 +74,14 @@ export default function CheckoutForm() {
         // Redirect to QRIS page
         window.location.href = `/qris?order_id=${data.order_id}`;
       } else {
+        setErrorTitle("Gagal Membuat Pembayaran");
         setErrorMessage(data.error || "Gagal membuat pembayaran QRIS.");
         setShowErrorModal(true);
       }
     } catch (error) {
       console.error(error);
-      setErrorMessage("Terjadi kesalahan pada sistem.");
+      setErrorTitle("Terjadi Kesalahan");
+      setErrorMessage("Terjadi kesalahan pada sistem. Silakan coba lagi.");
       setShowErrorModal(true);
     } finally {
       setIsLoading(false);
@@ -264,7 +269,7 @@ export default function CheckoutForm() {
             <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <AlertCircle className="w-10 h-10 text-red-500" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">Form Belum Lengkap</h3>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">{errorTitle}</h3>
             <p className="text-slate-600 mb-8">
               {errorMessage}
             </p>
