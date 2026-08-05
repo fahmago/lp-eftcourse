@@ -22,7 +22,7 @@ export default function Hero() {
             transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-100 text-pink-700 font-semibold text-sm mb-6 border border-pink-200">
-              <span className="animate-pulse">🔥</span> Promo: Cuma Rp 50.000 / Bulan!
+              <span className="animate-pulse">🔥</span> Promo: Cuma Rp 5.000 / Bulan!
             </div>
             <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-indigo-950 mb-6 leading-[1.1]">
               Lancar Speaking <br />

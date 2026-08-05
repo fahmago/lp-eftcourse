@@ -110,7 +110,7 @@ export default function CheckoutForm() {
   };
 
   return (
-    <section id="checkout" className="py-24 bg-pink-50/50">
+    <section id="checkout" className="py-24 pb-32 bg-pink-50/50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           {...fadeIn}
@@ -125,7 +125,7 @@ export default function CheckoutForm() {
               DAFTAR SEKARANG
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-indigo-950 mb-4">Amankan Kursi Anda!</h2>
-            <p className="text-xl font-bold text-slate-700">Cuma Rp 50.000 / Bulan</p>
+            <p className="text-xl font-bold text-slate-700">Cuma Rp 5.000 / Bulan</p>
           </div>
 
           <form className="space-y-10">
@@ -262,7 +262,7 @@ export default function CheckoutForm() {
                 disabled={isLoading}
                 className="w-full py-5 rounded-2xl bg-indigo-950 hover:bg-indigo-900 disabled:bg-slate-400 text-white font-bold text-lg transition-all shadow-xl shadow-indigo-950/20 active:scale-[0.98] flex items-center justify-center gap-2"
               >
-                {isLoading ? "Memproses..." : "Bayar Rp 50.000 & Masuk Grup WA"}
+                {isLoading ? "Memproses..." : "Bayar Rp 5.000 & Masuk Grup WA"}
                 {!isLoading && <ArrowRight className="w-5 h-5" />}
               </button>
               <p className="text-center text-sm text-slate-500 mt-4 flex items-center justify-center gap-1">

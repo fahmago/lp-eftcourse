@@ -11,23 +11,23 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 export default function FloatingWhatsApp() {
   return (
     <motion.a
-      href="https://wa.me/6281511591935?text=Halo%20Min-Course%2C%20saya%20tertarik%20dengan%20program%20EFT%20Course%20dan%20ingin%20bertanya%20lebih%20lanjut." 
+      href="https://wa.me/6281511591935?text=Halo%20Min-Course%2C%20saya%20tertarik%20dengan%20program%20EFT%20Course%20dan%20ingin%20bertanya%20lebih%20lanjut."
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_40px_-10px_rgba(37,211,102,0.7)] flex items-center justify-center hover:bg-[#1ebd5a] transition-colors group"
+      className="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_40px_-10px_rgba(37,211,102,0.7)] flex items-center justify-center hover:bg-[#1ebd5a] transition-colors group max-sm:bottom-20 max-sm:right-4 max-sm:p-3"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 20, delay: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
     >
-      <WhatsAppIcon className="w-8 h-8" />
-      
-      {/* Tooltip */}
-      <span className="absolute right-full mr-4 bg-white text-slate-800 text-sm font-bold px-4 py-2 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-slate-100 origin-right scale-95 group-hover:scale-100">
+      <WhatsAppIcon className="w-8 h-8 max-sm:w-6 max-sm:h-6" />
+
+      {/* Tooltip — hidden on mobile */}
+      <span className="absolute right-full mr-4 bg-white text-slate-800 text-sm font-bold px-4 py-2 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-slate-100 origin-right scale-95 group-hover:scale-100 max-sm:hidden">
         Contact Us via WhatsApp
       </span>
-      
+
       {/* Pulse effect */}
       <span className="absolute inset-0 rounded-full border-2 border-[#25D366] animate-ping opacity-30" style={{ animationDuration: '2s' }}></span>
     </motion.a>

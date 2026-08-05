@@ -132,7 +132,7 @@ export const SESSIONS: Record<string, SessionItem[]> = {
 // ─── FAQ ─────────────────────────────────────────────────────────────────────────
 export const FAQS = [
   {
-    q: "Kok bisa cuma 50 ribu sebulan dapat 3x seminggu live mentoring?",
+    q: "Kok bisa cuma 5 ribu sebulan dapat 3x seminggu live mentoring?",
     a: "Visi kami adalah membuat pendidikan bahasa Inggris yang berkualitas bisa diakses oleh siapa saja tanpa harus mahal. Subsidi silang dan efisiensi operasional memungkinkan kami memberikan harga ini khusus promo bulan ini!",
   },
   {

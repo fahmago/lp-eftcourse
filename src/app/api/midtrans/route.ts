@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     });
 
     const orderId = `EFT-${category}-${Date.now()}`;
-    const grossAmount = 50000;
+    const grossAmount = 5000;
 
     const parameter = {
       transaction_details: {
@@ -47,7 +47,6 @@ export async function POST(req: NextRequest) {
         "bni_va",
         "bri_va",
         "permata_va",
-        "gopay",
         "qris",
       ],
     };
