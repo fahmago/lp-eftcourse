@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         "bri_va",
         "permata_va",
         "gopay",
-        "qris",
+        "other_qris",
       ],
     };
 
