@@ -42,9 +42,7 @@ export async function POST(req: NextRequest) {
         email: email,
         phone: whatsapp,
       },
-      qris: {
-        acquirer: "gopay",
-      },
+      qris: {},
     };
 
     const transaction = await core.charge(parameter);
