@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const grossAmount = 5000;
 
     const parameter = {
-      payment_type: "qris",
+      payment_type: "gopay",
       transaction_details: {
         order_id: orderId,
         gross_amount: grossAmount,
@@ -42,7 +42,10 @@ export async function POST(req: NextRequest) {
         email: email,
         phone: whatsapp,
       },
-      qris: {},
+      gopay: {
+        enable_callback: true,
+        callback_url: "https://google.com",
+      },
     };
 
     const transaction = await core.charge(parameter);
