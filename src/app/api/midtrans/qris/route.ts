@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 const midtransClient = require("midtrans-client");
 
 export async function POST(req: NextRequest) {
@@ -6,7 +7,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { name, email, whatsapp, category, schedule, session } = body;
 
-    // Basic validation
     if (!name || !whatsapp || !email || !category || !schedule || !session) {
       return NextResponse.json(
         { error: "Mohon lengkapi semua data pendaftaran." },
@@ -14,17 +14,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create Snap API instance
-    const snap = new midtransClient.Snap({
+    const core = new midtransClient.CoreApi({
       isProduction: process.env.MIDTRANS_IS_PRODUCTION === "true",
       serverKey: process.env.MIDTRANS_SERVER_KEY,
       clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
     });
 
-    const orderId = `EFT-${category}-${Date.now()}`;
+    const orderId = `EFT-QRIS-${category}-${Date.now()}`;
     const grossAmount = 5000;
 
     const parameter = {
+      payment_type: "qris",
       transaction_details: {
         order_id: orderId,
         gross_amount: grossAmount,
@@ -42,26 +42,25 @@ export async function POST(req: NextRequest) {
         email: email,
         phone: whatsapp,
       },
-      enabled_payments: [
-        "bca_va",
-        "bni_va",
-        "bri_va",
-        "permata_va",
-        "gopay",
-        "qris",
-      ],
     };
 
-    const transaction = await snap.createTransaction(parameter);
+    const transaction = await core.charge(parameter);
+
+    // QRIS response contains qr_code_url in actions
+    const qrCodeAction = transaction.actions?.find(
+      (a: any) => a.name === "generate-qr-code"
+    );
 
     return NextResponse.json({
-      token: transaction.token,
-      redirect_url: transaction.redirect_url,
+      order_id: orderId,
+      qr_code_url: qrCodeAction?.url || transaction.qr_code_url || null,
+      gross_amount: grossAmount,
+      transaction_status: transaction.transaction_status,
     });
   } catch (error: any) {
-    console.error("Midtrans Error:", error);
+    console.error("Midtrans QRIS Error:", error?.message || error);
     return NextResponse.json(
-      { error: "Terjadi kesalahan saat memproses pembayaran." },
+      { error: "Terjadi kesalahan saat membuat QRIS." },
       { status: 500 }
     );
   }
