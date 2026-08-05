@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     });
 
     const orderId = `EFT-${category}-${Date.now()}`;
-    const grossAmount = 5000;
+    const grossAmount = 10000;
 
     const parameter = {
       transaction_details: {
