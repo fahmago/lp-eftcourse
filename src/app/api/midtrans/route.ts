@@ -47,7 +47,6 @@ export async function POST(req: NextRequest) {
         "bni_va",
         "bri_va",
         "permata_va",
-        "gopay",
         "other_qris",
       ],
     };
