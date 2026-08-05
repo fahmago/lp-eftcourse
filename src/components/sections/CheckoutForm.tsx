@@ -72,9 +72,13 @@ export default function CheckoutForm() {
       const data = await response.json();
 
       if (data.token) {
+        const orderId = data.order_id;
+        let pollInterval: ReturnType<typeof setInterval> | null = null;
+
         (window as any).snap.pay(data.token, {
           onSuccess: function (result: any) {
-            console.log(result);
+            console.log("Payment success:", result);
+            if (pollInterval) clearInterval(pollInterval);
             setShowSuccessModal(true);
             // Countdown 3 detik lalu redirect
             let counter = 3;
@@ -88,15 +92,42 @@ export default function CheckoutForm() {
             }, 1000);
           },
           onPending: function (result: any) {
-            alert("Menunggu pembayaran Anda.");
-            console.log(result);
+            console.log("Payment pending:", result);
+            // Start polling for status
+            if (orderId) {
+              pollInterval = setInterval(async () => {
+                try {
+                  const res = await fetch(`/api/midtrans/status?order_id=${orderId}`);
+                  const status = await res.json();
+                  if (status.transaction_status === "capture" || status.transaction_status === "settlement") {
+                    if (pollInterval) clearInterval(pollInterval);
+                    (window as any).snap.hide();
+                    setShowSuccessModal(true);
+                    let counter = 3;
+                    setRedirectCount(counter);
+                    const timer = setInterval(() => {
+                      counter -= 1;
+                      setRedirectCount(counter);
+                      if (counter <= 0) {
+                        clearInterval(timer);
+                        window.location.href = getAdminWaLink();
+                      }
+                    }, 1000);
+                  }
+                } catch (e) {
+                  console.error("Polling error:", e);
+                }
+              }, 3000);
+            }
           },
           onError: function (result: any) {
+            console.log("Payment error:", result);
+            if (pollInterval) clearInterval(pollInterval);
             alert("Pembayaran gagal!");
-            console.log(result);
           },
           onClose: function () {
-            alert("Anda menutup halaman pembayaran sebelum menyelesaikannya.");
+            console.log("Snap closed");
+            if (pollInterval) clearInterval(pollInterval);
           },
         });
       } else {
